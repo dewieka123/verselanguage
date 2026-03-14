@@ -1,0 +1,8 @@
+// macOS/Darwin
+clang -O3 -arch x86_64 -arch arm64 -o vl vl.c -lreadline -lm -ldl
+
+// Linux/BSD
+gcc -O3 -o vl vl.c -lreadline -lm -ldl
+
+// Windows
+gcc -O3 -o vl.exe vl.c -lm
