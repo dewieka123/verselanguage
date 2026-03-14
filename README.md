@@ -1,38 +1,78 @@
-# 🌌 VerseLanguage (VL)
-**Code like a human. Execute like a machine.**
+🛠️ VerseLanguage Compilation Guide
 
-VerseLanguage is a dependency-free, cross-platform scripting language built from the ground up in pure C. It was architected with a single philosophy: **programming should not look like math equations.** By replacing cryptic symbols with natural vocabulary and enforcing memory safety by design, VerseLanguage bridges the gap between absolute beginners and low-level system integrations.
+VerseLanguage (VL) is designed to be highly portable. Because it uses an OS Abstraction Layer, you can compile the exact same vl.c source code across macOS, Linux, and Windows using native C compilers.
 
----
+Here are the prerequisites and compilation scripts for each operating system.
 
-## ✨ Why VerseLanguage?
+🍎 1. macOS (Apple Silicon & Intel)
 
-* 🧠 **Human-First Logic:** Say goodbye to `for(int i=0; i<n; i++)`. In VL, you simply write `loop angka (10)`. Logic uses `yes` and `no` instead of abstract booleans.
-* 🛡️ **Ironclad Mutability:** Protect your data instinctively. Use `var` for variables that change, and `stvar` (Static Variable) for constants. No more guessing.
-* 🔌 **Native Dynamic Modules:** Extend the language infinitely. The `with` keyword acts as a direct bridge to your OS's dynamic linker, allowing you to load compiled C/Objective-C libraries (`.dylib`, `.so`, `.dll`) on the fly.
-* ⚡ **Zero Bloat:** No massive runtimes or virtual machines. Just one lightweight, lightning-fast C executable compiled natively for your architecture.
+Prerequisites
 
----
+You need the Xcode Command Line Tools which includes the clang compiler and necessary libraries.
+Open your terminal and run the following command to install them:
 
-## 💻 A Quick Look
+xcode-select --install
 
-VerseLanguage is highly readable. Here is an example of loading a native floating-point module and interacting with the user:
 
-```verse
-// Load native OS module dynamically
-with "./float.dylib";
+Compilation Command
 
-// Define a static (immutable) variable
-stvar greeting = "Welcome to VerseLanguage Calculator!";
-show(greeting);
+This command compiles the source code into a Universal Binary (running natively on both M-series and Intel chips) with support for Readline and dynamic .dylib modules.
 
-// Get user input and convert it
-var user_input = mkinput("Enter a decimal number: ");
-var number = float.parse(user_input);
+clang -O3 -arch x86_64 -arch arm64 -o vl vl.c -lreadline -lm -ldl
 
-// Simple, expressive logic
-if (number > 100) {
-    show("That's a massive number!");
-} else {
-    show("Result multiplied by 2:", number * 2);
-}
+
+🐧 2. Linux (Ubuntu / Debian / etc.)
+
+Prerequisites
+
+You need GCC (GNU Compiler Collection) and the development headers for Readline.
+Open your terminal and install the build essentials:
+
+sudo apt update
+sudo apt install build-essential libreadline-dev
+
+
+Compilation Command
+
+This command generates a highly optimized ELF executable with support for dynamic .so modules.
+
+gcc -O3 -o vl vl.c -lreadline -lm -ldl
+
+
+🪟 3. Windows
+
+Prerequisites
+
+You need MinGW (Minimalist GNU for Windows) to get the gcc compiler.
+
+Download and install MSYS2.
+
+Open the MSYS2 terminal and install the GCC toolchain by running:
+
+pacman -S mingw-w64-ucrt-x86_64-gcc
+
+
+Open your Windows Settings and add the MinGW bin folder (usually C:\msys64\ucrt64\bin) to your System Environment Variables (PATH).
+
+Compilation Command
+
+This command generates a native .exe executable. Note that Windows handles dynamic loading (.dll) via its native API (LoadLibrary), so we don't need the -ldl flag, and the fallback REPL doesn't require -lreadline.
+
+gcc -O3 -o vl.exe vl.c -lm
+
+
+🚀 Running the Interpreter
+
+After a successful compilation, you can start using VerseLanguage!
+
+Start the interactive REPL:
+
+macOS/Linux: ./vl
+
+Windows: .\vl.exe
+
+Run a script file:
+
+macOS/Linux: ./vl script.vl
+
+Windows: .\vl.exe script.vl
