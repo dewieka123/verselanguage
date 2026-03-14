@@ -1,8 +1,11 @@
 // macOS/Darwin
-clang -O3 -arch x86_64 -arch arm64 -o vl vl.c -lreadline -lm -ldl
+Prerequisites: You need the Xcode Command Line Tools. Install it by running: xcode-select --install
+Command: clang -O3 -arch x86_64 -arch arm64 -o vl vl.c -lreadline -lm -ldl 
 
 // Linux/BSD
-gcc -O3 -o vl vl.c -lreadline -lm -ldl
+Prerequisites: You need GCC and standard build tools. For Ubuntu/Debian, install them by running: sudo apt update && sudo apt install build-essential libreadline-dev
+Command: gcc -O3 -o vl vl.c -lreadline -lm -ldl 
 
 // Windows
-gcc -O3 -o vl.exe vl.c -lm
+Prerequisites: You need MinGW installed via MSYS2. Download MSYS2 from msys2.org, open the terminal, and run: pacman -S mingw-w64-ucrt-x86_64-gcc. Make sure to add the MinGW bin folder to your Windows PATH.
+Command: gcc -O3 -o vl.exe vl.c -lm
