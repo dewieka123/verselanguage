@@ -743,6 +743,7 @@ Value native_mkinput(int argCount, Value* args) {
 }
 
 // Fungsi untuk mendapatkan nama OS saat ini
+// Fungsi untuk mendapatkan nama OS saat ini (Sekarang makin lengkap!)
 Value native_getCurrentSystem(int argCount, Value* args) {
     #ifdef _WIN32
         return make_str("Windows");
@@ -750,6 +751,10 @@ Value native_getCurrentSystem(int argCount, Value* args) {
         return make_str("macOS");
     #elif __linux__
         return make_str("Linux");
+    #elif __FreeBSD__ || __OpenBSD__ || __NetBSD__
+        return make_str("BSD");
+    #elif __HAIKU__
+        return make_str("HaikuOS");
     #else
         return make_str("Unknown");
     #endif
