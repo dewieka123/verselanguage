@@ -22,7 +22,7 @@ There is no over-engineered Swift compiler nonsense here. No walled gardens. Jus
 
 VerseLanguage is highly readable but hides brutal low-level capabilities under the hood.
 
-```verse
+```
 // --- 1. DYNAMIC MODULE INJECTION ---
 // Bypass all security theater and inject C++ libraries directly into memory
 with "module/gamengine.so";
