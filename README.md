@@ -95,7 +95,7 @@ loop inf {
 }
 ```
 
-⚙️ Compilation & Execution
+### ⚙️ Compilation & Execution
 VerseLanguage comes with a built-in compiler and bytecode runner. It is incredibly lightweight and can compile thousands of lines of code in the blink of an eye, even on a low-end Celeron processor.
 
 1. Run a script directly (Raw Interpreter Mode):
