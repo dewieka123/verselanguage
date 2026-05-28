@@ -120,61 +120,6 @@ show(strLen(input));
 show(strReverse(input));
 ```
 
-### 10. Game Engine
-
-```
-with "module\gamengine.dll";
-
-gamengine.init_window("My Game", 800, 600);
-
-var px = 400;
-var py = 300;
-
-gamengine.add_wall(0, 0, 800, 20);
-gamengine.add_wall(0, 580, 800, 20);
-
-loop inf {
-    if (gamengine.is_key_pressed("LEFT") == yes)  { px = px - 4; }
-    if (gamengine.is_key_pressed("RIGHT") == yes) { px = px + 4; }
-
-    if (gamengine.check_collision(px, py, 32, 32) == no) {
-        gamengine.draw_rect(px, py, 32, 32, 0.2, 0.6, 1.0);
-    }
-
-    gamengine.update();
-}
-```
-
----
-
-## 🎮 GameEngine Features
-
-The `gamengine` module is a full game engine built in C++ with Qt6 + OpenGL + LibVLC:
-
-| Feature | Function |
-|---------|----------|
-| Create window | `init_window(title, w, h)` |
-| Draw rectangle | `draw_rect(x, y, w, h, r, g, b)` |
-| Draw text | `draw_text(text, x, y, r, g, b)` |
-| Draw image | `draw_image(path, x, y, w, h)` |
-| Draw button | `draw_button(text, x, y, w, h, r, g, b, mx, my, click)` |
-| Set background | `set_background(path)` |
-| Load 3D model | `import_3d(path)` |
-| Draw 3D model | `draw_3d(id, x, y, z, scale)` |
-| Play music | `play_music(path)` |
-| Play video | `play_video(path, x, y, w, h)` |
-| Keyboard input | `is_key_pressed(key)` |
-| Mouse button | `is_mouse_pressed(button)` |
-| Mouse position | `get_mouse_x()`, `get_mouse_y()` |
-| Mouse scroll | `get_mouse_scroll()` |
-| Add wall | `add_wall(x, y, w, h)` |
-| Check collision | `check_collision(x, y, w, h)` |
-| Clear walls | `clear_collisions()` |
-| Random number | `get_random(max)` |
-| Update frame | `update()` |
-
----
-
 ## ⚙️ Compilation & Execution
 
 **Run a script directly:**
