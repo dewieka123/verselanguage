@@ -19,7 +19,6 @@ No bloated runtimes. No 50GB SDKs. No walled gardens. Just raw C speed executing
 - 👽 **Military-Grade Bytecode Obfuscation** — Compile `.vl` scripts into encrypted `.vlb` files using Junk Byte Injection and Dynamic Rolling XOR keys seeded from OS time.
 - 👾 **Raw Bitwise & Memory Operations** — Treat strings as raw bytes. Extract binary, octal, and hexadecimal data directly from memory. Decode payloads back into values or ASCII.
 - 🎨 **Terminal Color Output** — Native ANSI color support via the built-in `color()` function.
-- 🎮 **First-Class Game Engine Support** — VerseLanguage has its own game engine (`gamengine`) built with Qt6, OpenGL, Assimp, and LibVLC. Render 2D/3D, play audio and video in-game, handle input — all scripted directly from `.vl` files.
 - 🌍 **True Cross-Platform** — One codebase runs everywhere: Windows 7/10/11, Linux (kernel 3/4/5/6), macOS, Android (Termux + NDK), iOS (jailbreak, Mach-O ARM64).
 
 ---
