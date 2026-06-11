@@ -18,7 +18,8 @@ No bloated runtimes. No 50GB SDKs. No walled gardens. Just raw C speed executing
 - 🌌 **Multiverse Execution** — Run up to 256 isolated execution environments (Verses). Switch between them mid-execution. Each Verse has its own memory, variables, and state.
 - 👽 **Military-Grade Bytecode Obfuscation** — Compile `.vl` scripts into encrypted `.vlb` files using Junk Byte Injection and Dynamic Rolling XOR keys seeded from OS time.
 - 👾 **Raw Bitwise & Memory Operations** — Treat strings as raw bytes. Extract binary, octal, and hexadecimal data directly from memory.
-- ⚠️ **Unsafe Blocks** — Manually allocate and free raw memory via `unsafe {}` blocks for low-level control.
+- ⚠️ **Unsafe Blocks** — Manually allocate raw memory, read and write byte-level data, and interact with simulated CPU registers — all inside guarded `unsafe {}` blocks.
+- 🖥️ **CPU Awareness** — Detect CPU instruction sets (`avx2`, `sse4.2`) and simulate x64 register manipulation (`RAX`, `RBX`, `RCX`, `RDX`) at runtime.
 - 🎨 **Terminal Color Output** — Native ANSI color support via the built-in `color()` function.
 - 🎮 **First-Class Game Engine Support** — Pair with [gamengine](https://github.com/dewieka123/gamengine) for 2D/3D rendering, audio, video, and input — all scripted from `.vl` files.
 - 🌍 **True Cross-Platform** — Windows 7/10/11, Linux (kernel 3/4/5/6), macOS, Android (Termux + NDK), iOS (jailbreak, Mach-O ARM64).
@@ -74,7 +75,15 @@ loop inf {
 }
 ```
 
-### 5. Arrays
+### 5. Increment Operator
+
+```
+var x = 0;
+x++;
+show(x);
+```
+
+### 6. Arrays
 
 ```
 var buffer = array();
@@ -85,7 +94,7 @@ show(array_get(buffer, 0));
 array_remove_first(buffer);
 ```
 
-### 6. Classes & Objects
+### 7. Classes & Objects
 
 ```
 class Player {
@@ -100,9 +109,11 @@ class Player {
 
 var p = new Player("Hero", 100);
 p.status();
+p.hp++;
+p.status();
 ```
 
-### 7. Dynamic Module Injection
+### 8. Dynamic Module Injection
 
 ```
 with "module\gamengine.dll";
@@ -110,7 +121,7 @@ with "module/gamengine.so";
 with "module/gamengine.dylib";
 ```
 
-### 8. Multiverse Execution
+### 9. Multiverse Execution
 
 ```
 var v1 = verse_add();
@@ -131,18 +142,58 @@ verse_delete(v1);
 verse_delete(v2);
 ```
 
-### 9. Unsafe Blocks
+### 10. Unsafe Blocks — Raw Memory
 
-Direct memory allocation and deallocation, only available inside `unsafe {}`. Attempting to call these outside an unsafe block triggers a runtime protection error.
+Allocate raw memory, read and write individual bytes directly via pointer indexing. All operations strictly require an `unsafe {}` block.
 
 ```
 unsafe {
-    var ptr = addMemAlloc(1024);
-    delMemAlloc(ptr);
+    var buf = addMemAlloc(1024);
+
+    buf[0] = 72;
+    buf[1] = 101;
+    buf[2] = 108;
+    buf[3] = 108;
+    buf[4] = 111;
+
+    show(buf[0]);
+    show(buf[1]);
+
+    delMemAlloc(buf);
 }
 ```
 
-### 10. Raw Memory & Bitwise Operations
+### 11. Unsafe Blocks — CPU Instruction Detection
+
+Verify the host CPU supports a required instruction set before executing hardware-dependent code.
+
+```
+unsafe {
+    require_cpu_instruction("avx2");
+    show("AVX2 is supported.");
+}
+```
+
+Supported flags: `"avx2"`, `"sse4.2"`. Triggers a runtime error if the CPU does not meet the requirement.
+
+### 12. Unsafe Blocks — CPU Register Simulation
+
+Simulate x64 register manipulation. Registers are stored in isolated heap memory — not actual hardware registers — providing an assembly-like API safely.
+
+```
+unsafe {
+    set_cpu_register("RAX", 999);
+    set_cpu_register("RBX", 42);
+
+    var a = get_cpu_register("RAX");
+    var b = get_cpu_register("RBX");
+    show(a + b);
+}
+```
+
+Available registers: `RAX`, `RBX`, `RCX`, `RDX`.
+
+### 13. Raw Memory & Bitwise Operations
 
 ```
 stvar payload = "Hello";
@@ -158,7 +209,7 @@ show(octal_decode("110"));
 show(octal_decode_ascii("110 145 154 154 157"));
 ```
 
-### 11. Terminal Color Output
+### 14. Terminal Color Output
 
 ```
 show(color("Success!", "green"));
@@ -170,7 +221,7 @@ show(color("Default",  "white"));
 show(color("Bold",     "bold"));
 ```
 
-### 12. System Calls
+### 15. System Calls
 
 ```
 NewFile("config.txt", "key=value");
@@ -180,14 +231,14 @@ OpenFile("document.pdf");
 show(getCurrentSystem());
 ```
 
-### 13. String Operations
+### 16. String Operations
 
 ```
 show(toLowerCase("Hello World"));
 show(toHigherCase("hello world"));
 ```
 
-### 14. Type Casting
+### 17. Type Casting
 
 ```
 var n = int("42");
@@ -196,7 +247,7 @@ var d = double("3.14159");
 var b = bool(1);
 ```
 
-### 15. CLI Arguments
+### 18. CLI Arguments
 
 ```
 show(array_len(sys_args));
@@ -224,9 +275,25 @@ All scripts run in **Verse 0** by default. `verse_switch` temporarily moves exec
 
 ---
 
+## ⚠️ Unsafe Zone
+
+The `unsafe {}` block is VerseLanguage's opt-in gateway to low-level hardware interaction. Calling any unsafe function outside this block triggers an immediate runtime protection error.
+
+| Function | Description |
+|----------|-------------|
+| `addMemAlloc(bytes)` | Allocate raw memory, returns a pointer |
+| `delMemAlloc(ptr)` | Free a raw memory pointer |
+| `ptr[offset]` | Read a byte from raw memory at offset |
+| `ptr[offset] = val` | Write a byte to raw memory at offset |
+| `require_cpu_instruction(flag)` | Assert CPU supports an instruction set |
+| `set_cpu_register(name, value)` | Write a value to a simulated register |
+| `get_cpu_register(name)` | Read a value from a simulated register |
+
+---
+
 ## 🎮 Game Engine
 
-VerseLanguage has a dedicated game engine module — **[gamengine](https://github.com/dewieka123/gamengine)** — built in C++ with Qt6, OpenGL, Assimp, and LibVLC. Load it with `with` and build full games directly from `.vl` scripts.
+VerseLanguage has a dedicated game engine module — **[gamengine](https://github.com/dewieka123/gamengine)** — built in C++ with Qt6, OpenGL, Assimp, and LibVLC. Load it with `with` and build full games directly from `.vl` files.
 
 ```
 with "module\gamengine.dll";
@@ -296,7 +363,7 @@ vl -byte secure_app.vlb
 
 **Compile VerseLanguage itself — Linux / macOS:**
 ```
-clang vl.c -o vl -O3 -lm
+clang vl.c -o vl -O3 -lm -lreadline
 ```
 
 **Compile VerseLanguage itself — Windows:**
@@ -375,7 +442,7 @@ clang vl.c -o vl.exe -O3 -lm -D_WIN32_WINNT=0x0601
 | `hexadecimal_decode_ascii(str)` | Decode hex string to ASCII |
 | `octal_decode_ascii(str)` | Decode octal string to ASCII |
 
-### Unsafe Memory
+### Unsafe Zone
 
 Only callable inside an `unsafe {}` block.
 
@@ -383,6 +450,11 @@ Only callable inside an `unsafe {}` block.
 |----------|-------------|
 | `addMemAlloc(bytes)` | Allocate raw memory, returns pointer |
 | `delMemAlloc(ptr)` | Free a raw memory pointer |
+| `ptr[offset]` | Read byte at offset from raw pointer |
+| `ptr[offset] = val` | Write byte at offset to raw pointer |
+| `require_cpu_instruction(flag)` | Assert CPU instruction set support |
+| `set_cpu_register(name, value)` | Write to simulated CPU register |
+| `get_cpu_register(name)` | Read from simulated CPU register |
 
 ### System
 
@@ -424,7 +496,7 @@ VerseLanguage 2.5-Multiverse
 ├── Interpreter      — Walks and evaluates the AST
 ├── GC               — Mark-and-sweep garbage collector (sweeps all Verses)
 ├── Multiverse       — Up to 256 isolated execution environments
-├── Unsafe Zone      — Opt-in raw memory allocation via unsafe {}
+├── Unsafe Zone      — Raw memory, pointer indexing, CPU register simulation
 ├── Module Loader    — dlopen / LoadLibraryA dynamic library bridge
 ├── Bytecode         — Rolling XOR encrypted .vlb compiler + runner
 └── REPL             — Interactive multiline terminal (Verse-aware prompt)
