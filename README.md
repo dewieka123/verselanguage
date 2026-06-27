@@ -26,6 +26,61 @@ No bloated runtimes. No 50GB SDKs. No walled gardens. Just raw C speed executing
 
 ---
 
+## 📦 Installation
+
+### macOS / Darwin
+
+**Prerequisites:** Homebrew and Readline. First, install the Homebrew package manager (if you haven't already), then install the `readline` library:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install readline
+```
+
+**Build:**
+
+```bash
+clang -O3 -o vl vl.c -lreadline -lm -ldl
+```
+
+and this works on both Intel and Apple Silicon Macs
+
+---
+
+### Linux / BSD
+
+**Prerequisites:** GCC and readline. On Ubuntu/Debian:
+
+```bash
+sudo apt update && sudo apt install build-essential libreadline-dev
+```
+
+**Build:**
+
+```bash
+gcc -O3 -o vl vl.c -lreadline -lm -ldl
+```
+
+---
+
+### Windows
+
+**Prerequisites:** MinGW via MSYS2. Download MSYS2 from [msys2.org](https://www.msys2.org), open the MSYS2 terminal, and run:
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-gcc
+```
+
+Add the MinGW `bin` folder to your Windows `PATH`, then build:
+
+```bash
+gcc -O3 -o vl.exe vl.c -lm
+```
+
+> `-lreadline` and `-ldl` are not needed on Windows. VerseLanguage handles terminal input natively via `#ifdef _WIN32`.
+
+---
+
 ## 💻 Syntax & Features
 
 ### 1. Variables & Constants
@@ -144,7 +199,7 @@ verse_delete(v2);
 
 ### 10. Unsafe Blocks — Raw Memory
 
-Allocate raw memory, read and write individual bytes directly via pointer indexing. All operations strictly require an `unsafe {}` block.
+Allocate raw memory and read/write individual bytes directly via pointer indexing. All operations strictly require an `unsafe {}` block.
 
 ```
 unsafe {
@@ -236,6 +291,7 @@ show(getCurrentSystem());
 ```
 show(toLowerCase("Hello World"));
 show(toHigherCase("hello world"));
+show(str(42));
 ```
 
 ### 17. Type Casting
@@ -256,6 +312,30 @@ show(array_get(sys_args, 0));
 
 ```
 vl main.vl arg1 arg2
+```
+
+---
+
+## ⚙️ Running Scripts
+
+**Run a script directly:**
+```
+vl main.vl
+```
+
+**Run with CLI arguments:**
+```
+vl main.vl arg1 arg2
+```
+
+**Compile to encrypted bytecode:**
+```
+vl compile main.vl -o secure_app.vlb
+```
+
+**Execute encrypted bytecode:**
+```
+vl -byte secure_app.vlb
 ```
 
 ---
@@ -339,55 +419,19 @@ See the full API reference at [github.com/dewieka123/gamengine](https://github.c
 
 ---
 
-## ⚙️ Compilation & Execution
-
-**Run a script directly:**
-```
-vl main.vl
-```
-
-**Run with CLI arguments:**
-```
-vl main.vl arg1 arg2
-```
-
-**Compile to encrypted bytecode:**
-```
-vl compile main.vl -o secure_app.vlb
-```
-
-**Execute encrypted bytecode:**
-```
-vl -byte secure_app.vlb
-```
-
-**Compile VerseLanguage itself — Linux / macOS:**
-```
-clang vl.c -o vl -O3 -lm -lreadline
-```
-
-**Compile VerseLanguage itself — Windows:**
-```
-clang vl.c -o vl.exe -O3 -lm -D_WIN32_WINNT=0x0601
-```
-
-> `-lreadline` is **not** needed on Windows. VerseLanguage handles terminal input natively via `#ifdef _WIN32`. The `0x0601` flag sets Windows 7 as the minimum target.
-
----
-
 ## 🌍 Platform Support
 
 | Platform | Status |
 |----------|--------|
 | Windows 7 / 10 / 11 (x64) | ✅ |
 | Linux kernel 3 / 4 / 5 / 6 (x86_64) | ✅ |
-| macOS | ✅ |
+| macOS (Intel + Apple Silicon universal) | ✅ |
 | Android via Termux | ✅ |
 | Android via NDK | ✅ |
 | iOS (Jailbreak, Mach-O ARM64) | ✅ |
 
 > **Why does the Linux ELF run on every kernel version?**
-> VerseLanguage targets stable POSIX syscalls. Linux upholds a rule: *"We never break userspace."* A binary compiled today still runs on a kernel 3 machine from 2012. Windows does not make this guarantee, hence the `-D_WIN32_WINNT` flag for Windows 7 targeting.
+> VerseLanguage targets stable POSIX syscalls. Linux upholds a rule: *"We never break userspace."* A binary compiled today still runs on a kernel 3 machine from 2012. Windows does not make this guarantee, hence MinGW is required to build for Windows.
 
 ---
 
@@ -410,6 +454,7 @@ clang vl.c -o vl.exe -O3 -lm -D_WIN32_WINNT=0x0601
 | `float(val)` | Cast to float |
 | `double(val)` | Cast to double |
 | `bool(val)` | Cast to boolean |
+| `str(val)` | Cast to string |
 
 ### String
 
