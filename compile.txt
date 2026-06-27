@@ -1,6 +1,6 @@
 // macOS/Darwin
 Prerequisites: You need the Xcode Command Line Tools. Install it by running: xcode-select --install
-Command: clang -O3 -arch x86_64 -arch arm64 -o vl vl.c -lreadline -lm -ldl 
+Command: clang -O3 -o vl vl.c -lreadline -lm -ldl 
 
 // Linux/BSD
 Prerequisites: You need GCC and standard build tools. For Ubuntu/Debian, install them by running: sudo apt update && sudo apt install build-essential libreadline-dev
