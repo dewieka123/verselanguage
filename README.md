@@ -65,7 +65,7 @@ gcc -O3 -o vl vl.c -lreadline -lm -ldl
 
 ### Windows
 
-**Prerequisites:** MinGW via MSYS2. Download MSYS2 from [msys2.org](https://www.msys2.org), open the MSYS2 terminal, and run:
+**Prerequisites:** MinGW via MSYS2. Download MSYS2 from [msys2.org](https://www.msys2.org), open the MSYS2 UCRT64 terminal, and run:
 
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-gcc
